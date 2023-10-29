@@ -39,9 +39,8 @@ public class ClientController {
     private void initialize() {
         startButton.disableProperty().bind(Bindings.createBooleanBinding(
                 () -> !SessionId.validateString(sessionIdField.getText())
-                        || controllerInput.getValue() == null
-                        || audioOutput.getValue() == null,
-                sessionIdField.textProperty(), controllerInput.valueProperty(), audioOutput.valueProperty()));
+                        || controllerInput.getValue() == null,
+                sessionIdField.textProperty(), controllerInput.valueProperty()));
 
         // force the field to be hex only
         sessionIdField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -53,20 +52,20 @@ public class ClientController {
         codecPreference.setItems(FXCollections.observableArrayList(SdpUtils.CodecPreference.getAvailablePreferences()));
         codecPreference.setValue(SdpUtils.CodecPreference.VP9);
 
-        audioOutput.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(final AudioDevice audioDevice) {
-                return audioDevice.getName();
-            }
-
-            @Override
-            public AudioDevice fromString(final String string) {
-                return audioOutput.getItems().stream()
-                        .filter(audioDevice -> audioDevice.getName().equals(string))
-                        .findFirst()
-                        .orElse(null);
-            }
-        });
+//        audioOutput.setConverter(new StringConverter<>() {
+//            @Override
+//            public String toString(final AudioDevice audioDevice) {
+//                return audioDevice.getName();
+//            }
+//
+//            @Override
+//            public AudioDevice fromString(final String string) {
+//                return audioOutput.getItems().stream()
+//                        .filter(audioDevice -> audioDevice.getName().equals(string))
+//                        .findFirst()
+//                        .orElse(null);
+//            }
+//        });
     }
 
     @FXML
@@ -83,12 +82,12 @@ public class ClientController {
         controllerInput.getSelectionModel().selectFirst();
     }
 
-    public void setAudioOutputDevices(final List<AudioDevice> audioDevices) {
-        final ObservableList<AudioDevice> observableList = FXCollections.observableList(audioDevices);
-        FXCollections.sort(observableList, Comparator.comparing(AudioDevice::getName));
-        audioOutput.setItems(observableList);
-        audioOutput.getSelectionModel().selectFirst();
-    }
+//    public void setAudioOutputDevices(final List<AudioDevice> audioDevices) {
+//        final ObservableList<AudioDevice> observableList = FXCollections.observableList(audioDevices);
+//        FXCollections.sort(observableList, Comparator.comparing(AudioDevice::getName));
+//        audioOutput.setItems(observableList);
+//        audioOutput.getSelectionModel().selectFirst();
+//    }
 
     public void setButtonAction(final Runnable runnable) {
         startButton.setOnAction(event -> runnable.run());
@@ -102,9 +101,7 @@ public class ClientController {
         return codecPreference.getValue();
     }
 
-    public AudioDevice getSelectedAudioDevice() {
-        return audioOutput.getValue();
-    }
+//    public AudioDevice getSelectedAudioDevice() { return audioOutput.getValue(); }
 
     public SessionId getSessionId() {
         return SessionId.fromString(sessionIdField.getText());

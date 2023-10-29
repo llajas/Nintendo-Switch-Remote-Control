@@ -48,15 +48,15 @@ public final class Client extends Application {
 
         final ArrayList<ControllerService> services = getAvailableServices();
         clientController.setControllerServices(services);
-        clientController.setAudioOutputDevices(RtcUtils.getAudioRenderDevicesBlocking());
+//        clientController.setAudioOutputDevices(RtcUtils.getAudioRenderDevicesBlocking());
         clientController.setButtonAction(() -> {
             final ControllerService service = clientController.getSelectedControllerService();
             final SdpUtils.CodecPreference codecPreference = clientController.getPreferredVideoCodec();
-            final AudioDevice audioDevice = clientController.getSelectedAudioDevice();
+//            final AudioDevice audioDevice = clientController.getSelectedAudioDevice();
             final SessionId sessionId = clientController.getSessionId();
 
             final ConnectionFrame connectionFrame = new ConnectionFrame(
-                    service, sessionId, codecPreference, audioDevice, primaryStage::show
+                    service, sessionId, codecPreference, primaryStage::show
             );
             try {
                 connectionFrame.show();

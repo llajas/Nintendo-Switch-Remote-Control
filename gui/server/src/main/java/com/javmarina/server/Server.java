@@ -45,17 +45,17 @@ public final class Server extends Application {
         final List<SerialPort> ports = new ArrayList<>(Arrays.asList(SerialPort.getCommPorts()));
         ports.add(0, null); // Add "None" option
         serverController.setSerialPorts(ports);
-        serverController.setVideoInputDevices(MediaDevices.getVideoCaptureDevices());
-        serverController.setAudioInputDevices(RtcUtils.getAudioCaptureDevicesBlocking());
+//        serverController.setVideoInputDevices(MediaDevices.getVideoCaptureDevices());
+//        serverController.setAudioInputDevices(RtcUtils.getAudioCaptureDevicesBlocking());
         serverController.setButtonAction(() -> {
             final SerialPort serialPort = serverController.getSelectedSerialPort();
-            serverController.stopVideoPreview();
+//            serverController.stopVideoPreview();
 
             final ConnectionFrame connectionFrame = new ConnectionFrame(
                     new SerialAdapter(serialPort, serverController.getBaudrate()),
                     serverController.getSessionId(),
-                    serverController.getVideoDeviceSource(),
-                    serverController.getSelectedAudioDevice(),
+//                    serverController.getVideoDeviceSource(),
+//                    serverController.getSelectedAudioDevice(),
                     () -> {
                         primaryStage.show();
                         serverController.reload();

@@ -27,31 +27,31 @@ import java.util.TimerTask;
 
 public class RtcServer extends RtcPeer {
 
-    private final VideoDeviceSource videoSource;
+//    private final VideoDeviceSource videoSource;
     private final Callback callback;
 
     public RtcServer(final SessionId sessionId,
-                     final AudioDeviceModule audioDeviceModule,
-                     final VideoDeviceSource videoSource,
+//                     final AudioDeviceModule audioDeviceModule,
+//                     final VideoDeviceSource videoSource,
                      final Callback callback) {
-        super(new SignalingPeer(sessionId, SignalingPeer.Role.SERVER), audioDeviceModule);
-        this.videoSource = videoSource;
+        super(new SignalingPeer(sessionId, SignalingPeer.Role.SERVER), null);
+//        this.videoSource = videoSource;
         this.callback = callback;
         createTransceivers();
     }
 
     private void createTransceivers() {
-        final AudioOptions audioOptions = new AudioOptions();
-        audioOptions.echoCancellation = false;
-        audioOptions.autoGainControl = false;
-        audioOptions.noiseSuppression = false;
-        final AudioSource audioSource = factory.createAudioSource(audioOptions);
-        final AudioTrack audioTrack = factory.createAudioTrack(AUDIO_TRACK_NAME, audioSource);
-        final RTCRtpSender audioSender = peerConnection.addTrack(audioTrack, List.of(STREAM_ID));
+//        final AudioOptions audioOptions = new AudioOptions();
+//        audioOptions.echoCancellation = false;
+//        audioOptions.autoGainControl = false;
+//        audioOptions.noiseSuppression = false;
+//        final AudioSource audioSource = factory.createAudioSource(audioOptions);
+//        final AudioTrack audioTrack = factory.createAudioTrack(AUDIO_TRACK_NAME, audioSource);
+//        final RTCRtpSender audioSender = peerConnection.addTrack(audioTrack, List.of(STREAM_ID));
 
         // Add video
-        final VideoTrack videoTrack = factory.createVideoTrack(VIDEO_TRACK_NAME, videoSource);
-        final RTCRtpSender videoSender = peerConnection.addTrack(videoTrack, List.of(STREAM_ID));
+//        final VideoTrack videoTrack = factory.createVideoTrack(VIDEO_TRACK_NAME, videoSource);
+//        final RTCRtpSender videoSender = peerConnection.addTrack(videoTrack, List.of(STREAM_ID));
 
         // Block incoming media streams
         for (final RTCRtpTransceiver transceiver : peerConnection.getTransceivers()) {
@@ -131,15 +131,15 @@ public class RtcServer extends RtcPeer {
     @Override
     protected void onConnected() {
         super.onConnected();
-        videoSource.start();
+//        videoSource.start();
         callback.onSessionStarted();
     }
 
     @Override
     protected void onDisconnected() {
-        audioDeviceModule.dispose();
+//        audioDeviceModule.dispose();
         signalingPeer.close();
-        videoSource.stop();
+//        videoSource.stop();
         callback.onSessionStopped();
         new Timer().schedule(
                 new TimerTask() {

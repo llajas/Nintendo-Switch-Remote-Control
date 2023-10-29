@@ -42,9 +42,9 @@ public class RtcClient extends RtcPeer {
     public RtcClient(final SessionId sessionId,
                      final PacketProvider packetProvider,
                      final SdpUtils.CodecPreference codecPreference,
-                     final AudioDeviceModule audioDeviceModule,
+//                     final AudioDeviceModule audioDeviceModule,
                      final Callback callback) {
-        super(new SignalingPeer(sessionId, SignalingPeer.Role.CLIENT), audioDeviceModule);
+        super(new SignalingPeer(sessionId, SignalingPeer.Role.CLIENT), null);
         this.packetProvider = packetProvider;
         this.codecPreference = codecPreference;
         this.callback = callback;
@@ -79,25 +79,25 @@ public class RtcClient extends RtcPeer {
     }
 
     private void createTransceivers() {
-        final AudioSource audioSource = factory.createAudioSource(new AudioOptions());
-        final AudioTrack audioTrack = factory.createAudioTrack(AUDIO_TRACK_NAME, audioSource);
+//        final AudioSource audioSource = factory.createAudioSource(new AudioOptions());
+//        final AudioTrack audioTrack = factory.createAudioTrack(AUDIO_TRACK_NAME, audioSource);
         final RTCRtpTransceiverInit audioTransceiverInit = new RTCRtpTransceiverInit();
         audioTransceiverInit.direction = RTCRtpTransceiverDirection.RECV_ONLY;
         audioTransceiverInit.streamIds.add(STREAM_ID);
-        final RTCRtpTransceiver audioTransceiver = peerConnection.addTransceiver(audioTrack, audioTransceiverInit);
+//        final RTCRtpTransceiver audioTransceiver = peerConnection.addTransceiver(audioTrack, audioTransceiverInit);
 
         final VideoSource videoSource = new VideoDeviceSource();
-        final VideoTrack videoTrack = factory.createVideoTrack(VIDEO_TRACK_NAME, videoSource);
+//        final VideoTrack videoTrack = factory.createVideoTrack(VIDEO_TRACK_NAME, videoSource);
         final RTCRtpTransceiverInit videoTransceiverInit = new RTCRtpTransceiverInit();
         videoTransceiverInit.direction = RTCRtpTransceiverDirection.RECV_ONLY;
         videoTransceiverInit.streamIds.add(STREAM_ID);
-        final RTCRtpTransceiver videoTransceiver = peerConnection.addTransceiver(videoTrack, videoTransceiverInit);
+//        final RTCRtpTransceiver videoTransceiver = peerConnection.addTransceiver(videoTrack, videoTransceiverInit);
     }
 
     public void stop() {
         peerConnection.close(); // will call onDisconnected()
         factory.dispose();
-        audioDeviceModule.dispose();
+//        audioDeviceModule.dispose();
         signalingPeer.close();
     }
 
@@ -155,7 +155,7 @@ public class RtcClient extends RtcPeer {
         peerConnection.createOffer(offerOptions, new CreateSessionDescriptionObserver() {
             @Override
             public void onSuccess(final RTCSessionDescription description) {
-                final RTCSessionDescription newSessionDescription = SdpUtils.setCodecPreference(description, codecPreference);
+                final RTCSessionDescription newSessionDescription = SdpUtils.setCodecPreference(description, null);
                 peerConnection.setLocalDescription(newSessionDescription, new SetSessionDescriptionObserver() {
                     @Override
                     public void onSuccess() {

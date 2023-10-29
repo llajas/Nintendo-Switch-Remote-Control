@@ -43,7 +43,7 @@ public class ConnectionFrame implements RtcClient.Callback {
     private final ControllerService service;
     private final SessionId sessionId;
     private final SdpUtils.CodecPreference codecPreference;
-    private final AudioDevice audioDevice;
+//    private final AudioDevice audioDevice;
     private final Callback callback;
 
     private RtcClient rtcClient;
@@ -56,12 +56,12 @@ public class ConnectionFrame implements RtcClient.Callback {
     public ConnectionFrame(final ControllerService service,
                            final SessionId sessionId,
                            final SdpUtils.CodecPreference codecPreference,
-                           final AudioDevice audioDevice,
+//                           final AudioDevice audioDevice,
                            final Callback callback) {
         this.service = service;
         this.sessionId = sessionId;
         this.codecPreference = codecPreference;
-        this.audioDevice = audioDevice;
+//        this.audioDevice = audioDevice;
         this.callback = callback;
     }
 
@@ -102,14 +102,14 @@ public class ConnectionFrame implements RtcClient.Callback {
         timeline.setCycleCount(Animation.INDEFINITE);
 
         RtcUtils.getAudioDeviceModule(audioDeviceModule -> {
-            audioDeviceModule.setPlayoutDevice(audioDevice);
-            audioDeviceModule.initPlayout();
+//            audioDeviceModule.setPlayoutDevice(audioDevice);
+//            audioDeviceModule.initPlayout();
 
             rtcClient = new RtcClient(
                     sessionId,
                     service::getControllerStatus,
                     codecPreference,
-                    audioDeviceModule,
+//                    audioDeviceModule,
                     this
             );
             rtcClient.start(); // onSessionStarted() will be called if successful
