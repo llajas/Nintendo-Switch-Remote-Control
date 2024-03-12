@@ -1,9 +1,11 @@
 package com.javmarina.webrtc;
 
+import com.javmarina.client.JamepadManager;
 import com.javmarina.client.services.DefaultJamepadService;
+import com.javmarina.util.Packet;
 import com.javmarina.webrtc.signaling.SessionId;
 import com.javmarina.webrtc.signaling.SignalingPeer;
-import com.studiohartman.jamepad.ControllerManager;
+import com.studiohartman.jamepad.ControllerIndex;
 
 public class UnifiedApplication {
 
@@ -11,10 +13,14 @@ public class UnifiedApplication {
         // Load WebRTC library
         WebRtcLoader.loadLibrary();
 
-        // Initialize controller input capture
-        ControllerManager controllers = new ControllerManager();
-        controllers.initSDLGamepad();
-        DefaultJamepadService jamepadService = DefaultJamepadService.fromControllerIndex(controllers.getControllerIndex(0));
+        // Initialize JamepadManager for controller input capture
+        JamepadManager.init();
+        ControllerIndex controllerIndex = JamepadManager.getFirstAvailableController();
+        if (controllerIndex == null) {
+            System.out.println("No controllers connected.");
+            return;
+        }
+        DefaultJamepadService jamepadService = DefaultJamepadService.fromControllerIndex(controllerIndex);
 
         // Initialize WebRTC signaling
         SessionId sessionId = new SessionId(); // Generate or retrieve a session ID
@@ -47,6 +53,11 @@ public class UnifiedApplication {
             }
         });
 
+        // Main loop for input capture and packet processing
+        while (true) {
+            Packet packet = jamepadService.getPacket();
+            // Packet processing and command sending logic will be implemented here
+        }
         // Main loop for input capture and packet processing will be added here
     }
 }
