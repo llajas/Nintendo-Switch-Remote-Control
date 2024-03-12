@@ -10,6 +10,9 @@ import com.javmarina.client.services.KeyboardService;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import com.javmarina.server.SerialAdapter;
+import com.fazecast.jSerialComm.SerialPort;
+
 public class UnifiedApplication {
 
     private static KeyboardService keyboardService;
@@ -19,6 +22,8 @@ import com.javmarina.client.services.bot.ExampleCommandProvider;
 import com.javmarina.client.services.bot.BotService;
 
 private static DiscordService discordService;
+
+    private static SerialAdapter serialAdapter;
 
     public static void main(final String[] args) {
         // Load WebRTC library
@@ -64,6 +69,21 @@ private static DiscordService discordService;
             }
         });
 
+        // Initialize SerialAdapter for Arduino communication
+        SerialPort serialPort = SerialPort.getCommPorts()[0]; // Assuming Arduino is the first connected device
+        serialAdapter = new SerialAdapter(serialPort, 115200); // Adjust baud rate as needed
+        if (serialAdapter.isBaudrateInvalid()) {
+            System.out.println("Invalid baud rate for the serial port.");
+            return;
+        }
+        try {
+            serialAdapter.sync(true); // Force synchronization with the Arduino
+        } catch (IOException e) {
+            System.out.println("Failed to synchronize with the Arduino.");
+            e.printStackTrace();
+            return;
+        }
+
         // Initialize KeyboardService
         keyboardService = new KeyboardService();
         Scene scene = new Scene(new Group(), 800, 600); // Placeholder for actual content
@@ -78,6 +98,10 @@ private static DiscordService discordService;
         // Main loop for input capture and packet processing
         while (true) {
             Packet packet = jamepadService.getPacket();
+            // Send packet to Arduino
+            if (!serialAdapter.sendPacket(packet)) {
+                System.out.println("Failed to send packet to Arduino.");
+            }
             // Here, you would also check for any new commands received via Discord
             Packet keyboardPacket = keyboardService.getPacket();
             // Packet processing and command sending logic will be implemented here
